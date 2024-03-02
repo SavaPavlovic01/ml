@@ -1,0 +1,44 @@
+HOUSING
+---------------------------------------------------------------------------------------------
+prvo si napisao kod koji skida i unzipuje (ovo nije bas bitno iskr)
+
+onda mozes da pogledas histograme sa .hist(bins=neki broj, figsize=(x,y)) (ovo bins je koliko onih kao kofa ima)
+i mozes da pozoves .info i .describe da vidis sta i kako
+
+onda treba da podelis na test i train set (mozes rucno al bolje da samo pozoves ugradjenu f-ju)
+onda je radio stratified podelu (ovo se radi da bi zastupljenost pojedinih grupa bila ista u svakom setu kao sto je u celoj bazi) 
+---data["income_cat"] = pd.cut(data["median_income"], bins=[0, 1.5, 3, 4.5, 6, np.inf], labels=[1,2,3,4,5])--- (OVO DELI U GRUPE)
+na osnovu vrednosti u bins dodeljuje labelu iz labels
+onda pozoves StratifiedShuffleSplit da bi dobio indekse
+
+matrix = data.corr() da bi dobio koeficijent korelacije
+pa matrix["sta god"] da bi dobio korelaciju s tim
+scatter_matrix i tu prosledis kolone i on ti nacrta scatter plot svaki sa svakim
+mozes i data.plot(kind = "scatter"....) da bi dobio samo korelaciju 2 kolone
+
+posle ovoga mozes da dodas neke svoje kolone
+
+mozes da razdvoji podatke od labela, jer kad transformises podatke vrv neces da radis iste stvari sa labelama
+
+kad neka polja fale, mozes ili da izbaci taj red, celu kolonu ili da stavis neku vrednost tu (kao npr null, mean, median...)
+
+kod sklearn ako hoces custom transformacije napravi klasu koja nasledjuje od BaseEstimator i TransformerMixin pa samo napises
+fit (koji vraca self uvek) i transform
+
+kad skaliras: normalizacija (min-max scaling) ili standardization. Outliers manje uticu na ovo drugo, ako alogiratm prihvata samo
+vrednosti izmedju 0 i 1 moras ovo prvo, jer drugo daje izvan ovog opsega 
+
+Pipeline(Prosljedjujes mu tuple(ime, transformator)) i ColumnTransformer(Tuple(ime, transformator i kolone na kojima treba da radi))
+
+Sracunaj gresku pa isprobaj razlicite modele(algoritme) i vidi koj ima najmanju gresku
+
+Napravi validation set (cross evaluation), ovako proveravs da li overfit-uje
+Kad bude dobar i za validatio set mozes da ga treniras na trainSet + validationSet
+
+Odredi par modela koji najbolje rade
+
+GridSearchCV trazi najbolje hiper-parametre, RandomSearchCV se koristi ako ima previse kombinacija  
+
+Kod RandomForest mozes da vidis koliko je koji podatak bitan, onda mozda mozes da izbacis manje bitne podatke
+
+95% confidance interval(idk sta je ovo)
