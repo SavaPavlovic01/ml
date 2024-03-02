@@ -1,4 +1,4 @@
-HOUSING
+HOUSING (REGRESSION)
 ---------------------------------------------------------------------------------------------
 prvo si napisao kod koji skida i unzipuje (ovo nije bas bitno iskr)
 
@@ -42,3 +42,6 @@ GridSearchCV trazi najbolje hiper-parametre, RandomSearchCV se koristi ako ima p
 Kod RandomForest mozes da vidis koliko je koji podatak bitan, onda mozda mozes da izbacis manje bitne podatke
 
 95% confidance interval(idk sta je ovo)
+
+MNIST (classification)
+----------------------------------------------------------------------------------------------------------------
