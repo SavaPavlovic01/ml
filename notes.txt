@@ -25,6 +25,8 @@ kad neka polja fale, mozes ili da izbaci taj red, celu kolonu ili da stavis neku
 kod sklearn ako hoces custom transformacije napravi klasu koja nasledjuje od BaseEstimator i TransformerMixin pa samo napises
 fit (koji vraca self uvek) i transform
 
+ako neko polje ima tekst, mozes ili ordinalEncoder ako ima smisla da se porede ili OneHot (svaka razlicita vrednost postje polje)
+
 kad skaliras: normalizacija (min-max scaling) ili standardization. Outliers manje uticu na ovo drugo, ako alogiratm prihvata samo
 vrednosti izmedju 0 i 1 moras ovo prvo, jer drugo daje izvan ovog opsega 
 
@@ -45,3 +47,36 @@ Kod RandomForest mozes da vidis koliko je koji podatak bitan, onda mozda mozes d
 
 MNIST (classification)
 ----------------------------------------------------------------------------------------------------------------
+Cross validation: podelis na K fold-ova (grupe podjednake velicine) pa ga treniras na K-1 fold-ova i testiras na onaj koji je osta.
+Ovo ponavljas K puta, svaki put izostavis razlicit fold
+
+Cross_val_score radi cross evaluation. Vraca preciznost
+cross_val_predict: isto cross evaluation ali vraca predikcije
+
+Kod klasifikacije tacnost nije toliko bitna
+Confusion matrix (koliko puta je clan klase B klasifikovan kao clan klase A)
+
+precision i recall (true positive rate TPR)
+f1_score kombinacija ove dve, korisno ako treba da uporedjujes modele
+
+kad je manji recall to znaci da ima dosta false negative
+
+recall i precision su obrnuto proporcijalni, zavise od threshold-a
+mozes da pravis gravik zavisnosti recall-a od precision-a (precision_recall_curve u sklearn)
+
+receiver operating characterisitc (ROC) curve
+grafik recall (true positive rate) vs false positive rate = 1 - true negative rate (specificity)
+sto je povrsina ispod krive bliza 1 to bolje
+
+prvu krivu koristis ako te vise zanima FP ili ako je pozitivna klasa retka
+
+ako alogoritam moze da radi samo binarnu klasifikaciju, mozes da treniras K modela
+npr ako treba da razlikuje brojeve, svaki model prepoznaje da li je slika taj neki broj ili ne
+onda uzmes score koji su dodelili o uzmes onaj koji je najveci (One-versus-all OvA)
+
+ili mozes model koji razlikuje svaka dva broja(da li je 0 ili 1, 0 ili 2....) one versus one (Ovo) strategija
+onda kledas koja klasa je dobila najvise "duela"
+
+Confusion matrica mozes da prikazes sa matplotlib.matshow
+
+mozda je dobra ideja da na pocetku razdvojis kolone koje su brojevi i kolone koje su kategorije
