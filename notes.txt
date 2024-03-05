@@ -80,3 +80,123 @@ onda kledas koja klasa je dobila najvise "duela"
 Confusion matrica mozes da prikazes sa matplotlib.matshow
 
 mozda je dobra ideja da na pocetku razdvojis kolone koje su brojevi i kolone koje su kategorije
+
+
+LINEAR REGRESSION
+-------------------------------------------------------------------------------------------------------------------------------------
+predicted_value = O_0 + O_1 * X_1 + .... + O_n * X_n
+O_0 je bias, ostali su weights
+predicted_value (y sa kapicom u knjizi) = O*X (vektori) (O sadrzi sve one O vrednosti, X na pocetku ima 1)
+
+hoces da minimizujes gresku . 2 nacina:
+Normal equation: O_min = (X^T * X)^-1 * X^T * y
+SVD: O_min = X^+ * y (ovo X+ je pseudoinvers)
+pseudoinvers se racuna tako sto uradis SVD X = U * E * V^T, pa X^+ = V * E^+ * U^T
+E+ se racuna tako sto sve mnogo male vrednosti stavis da su jednake nuli, i uradis inverz ostalih vrednosti i onda uradis transponovanje
+
+slozenost:
+Normal equation O(n^2.4 ili n^3) n je broj feature-a
+SVD O(n^2)
+
+kad se istrenira, brzo daje predikcije 
+
+dobro rade sa velkim training set-om O(n)
+
+Ova 2 nisu pogodna ako ima mnogo feature-a
+
+Gradient descent
+-----------------------------------------------------------------
+MSE ima samo jedan minimun (nece nikad da se zaglavi na neki lokalan minimum)
+bolje radi ako su sve kolone normalizovane, odnosno ako imaju isti scale
+
+parametar learning rate: odredjuje velicinu "koraka", ako je previse malo treba dugo da konvergira, ako previse veliko divergira
+
+tolerance: sproovodi algoritam sve dok norm(ono cudo sa parc izvodima valjda??) ne padne ispod tolerance, onda prekida
+
+Batch gradient descent
+-----------------------
+suma parcijalnih izvoda, u svakom koraku radi sa celim set-om, lose ako imas veliki set
+dobro skalira sa brojem feature-a
+∂/∂θj (MSE(θ)) =2/m * ∑(θ^T * x − y) * x_j ovo je za samo jednu promenjivu
+
+za sve zajedno dobijes ∇θ MSE(θ) = 2/m * X^T * (X*θ - y)
+θ_next_step = θ - ni * ovo gore  (ni je learning rate)
+
+Stochastic gradient descent
+-----------------------------
+umesto da uvek radi sa celim set-om, nasumicno izabere jednu instancu i radi korak samo s njom
+mnogo dobro skalira sa velikim set-om
+ne ide uvek pravo dole kao prosli, ovo moze da bude i dobro, jer moze da preskoci lokalani minimum
+jedna iteracija = epoch
+posle svake iteracije treba da se uradi shuffle, jer ti random uzorci moraju da imaju istu distribuciju kao data set
+umesto konstantne learning-rate moze da se menja, tako da na pocetku bude veci
+
+ako sam dobro razumeo:
+ako ima n epoha i data set je velicine m ti radis
+for epoch:
+    for m:
+        onda ovde random izaberes jednu instancu i pravis se kao da je to ceo set (m = 1)
+        i dalje radis kao batch grad. descent
+        ubrzanje se dobija kad radis onaj dot product. Jer u proslom su ti matrice velicine 1xm a ovde 1x1
+
+Mini-batch gradient descent
+----------------------------
+ista fora kao prosli, samo sto umesto jedan imas batch podataka(>1)
+ovo se cak i brze racuna zbog optimizacija vektorskih operaija (narucito ako koristi GPU)
+
+|-------------------------------------------------------------------------------------------------------------|
+|Algorithm       | Large m | Out-of-core support | Large n | Hyperparams | Scaling required | Scikit-Learn    |
+|-------------------------------------------------------------------------------------------------------------|
+|Normal Equation | Fast    | No                  | Slow    | 0           | No               | n/a             |
+|SVD             | Fast    | No                  | Slow    | 0           | No               | LinearRegression|
+|Batch GD        | Slow    | No                  | Fast    | 2           | Yes              | SGDRegressor    |
+|Stochastic GD   | Fast    | Yes                 | Fast    | ≥2          | Yes              | SGDRegressor    |
+|Mini-batch GD   | Fast    | Yes                 | Fast    | ≥2          | Yes              | SGDRegressor    |
+|-------------------------------------------------------------------------------------------------------------|
+
+
+Polynomial regression
+--------------------------------------
+mozes da dodas stepen feature-a kao novi feature i onda da samo koristis linear regression
+npr ako imas 2 feature-a a i b, dodas a^2, a^3, b^2 ..., mozes cak da dodas a*b, a^2*b itd
+ako ovako radis broj feature-a raste O(n!)
+u sklearn samo pozoves PolynomialFeatures(degree)
+ako stavis preveliki degree: overfitting
+premali underfitting
+
+mozes da pravis grafik zavisnosti greske od velicine set-a (learnig curves). Na isti grafik stavis training set i validation set
+ako je greska visoka i ako su obe krive blizu, vrv underfitting. Ne pomaze ako dodajes podatke
+ako je greska na trainig set-u niska i postoji razmak onda vrv overfitting. Bice bolje ako dodajes podatke
+
+generalization error (odredjuje da li over, under fituje) je suma 3 stvari
+Bias: nastaje zbog losih pretpostavki (linearno kad je usvari polinomijalno). Ako je ovo visoko underfitting
+Variance: nastaje zbog prevelike osetljivosti na male promene u trening setu. Ako je ovo visoko overfitting
+irreducible error: ako su losi podaci (noisy)
+
+Bias i variance su obrnuto proporcijalni
+
+ako model overfituje moras da ga ogranicis, kod polinomijalnih mozes da smanjis stepen, kod linearnih mozes da ogranicis weights
+
+Ridge regression
+-------------------------------------
+na cost funkciju se dodaje alfa * suma kvadrata tezina (reguralization term), ovo ga tera da tezine budu manje
+ovaj reguralization term se samo koristi kad treniras, kad ga evaluiras posle treninga nema ovaj term
+alfa je hiperparametar, sto veci tezine blize nuli
+bitno je da normalizujes pre nego sto radis ovo
+
+Lasso regression
+--------------------------------------
+slicno samo se dodaje alfa * suma apsolutnih vrednosti tezina
+lasso generalno eliminise neke faktore
+
+Elastic net
+--------------------------------------
+kombinacija prosla dva
+ima hiperparametar r, koji kontrolise miks izmedju ta 2
+generalno neces nikad cistu linearnu regresiju da koristis, ridge je dobar za pocetak
+ako mislis da malo feature-a doprinosi onda lasso ili elastic, generalno je bolji elastic. 
+
+Early stopping
+---------------------------------------
+treniras ga sve dok validation error pada, kada opet pocne da raste zaustivis treniranje
+ovo sprecava overfitting
