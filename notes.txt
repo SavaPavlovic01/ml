@@ -177,14 +177,14 @@ Bias i variance su obrnuto proporcijalni
 
 ako model overfituje moras da ga ogranicis, kod polinomijalnih mozes da smanjis stepen, kod linearnih mozes da ogranicis weights
 
-Ridge regression
+Ridge regression (l2 penalty)
 -------------------------------------
 na cost funkciju se dodaje alfa * suma kvadrata tezina (reguralization term), ovo ga tera da tezine budu manje
 ovaj reguralization term se samo koristi kad treniras, kad ga evaluiras posle treninga nema ovaj term
 alfa je hiperparametar, sto veci tezine blize nuli
 bitno je da normalizujes pre nego sto radis ovo
 
-Lasso regression
+Lasso regression (l1 penalty)
 --------------------------------------
 slicno samo se dodaje alfa * suma apsolutnih vrednosti tezina
 lasso generalno eliminise neke faktore
@@ -200,3 +200,67 @@ Early stopping
 ---------------------------------------
 treniras ga sve dok validation error pada, kada opet pocne da raste zaustivis treniranje
 ovo sprecava overfitting
+
+
+Logistic regression
+---------------------------------------
+veoma slicno klasicnoj regresiji, samo sto kad sracuna onu sumu, ne izbaci to nego ga provuce kroz sigmoid koji vraca broj 
+izmedju 0 i 1
+
+sigmoid = 1/(1+exp(-t))
+
+ako je dobijeni broj manji od 0.5 onda pripada jednoj klasi, else pripada drugoj klasi
+
+cost fja: (y je kojoj grupi pripada, p je ono sto dobijes nako sigmoid)
+    c = -log(p) ako je y = 1
+        -log(1-p) ako je y = 0
+
+ova prva cena jer sto je p manje cena je veca (ako je p bas malo tj. ako je model ubedjen da je y = 0 kazna velika)
+drugo ista logika samo obrnuto
+
+ne postoji normal equation, moze gradient descent
+
+softmax regression
+------------------------------------------
+moze da ima k klasa
+radi tako sto ima razdvojene weights i bias za svaku klasu, onda sracuna score za svaku klasu. 
+verovatnocu da pripada klasi k dobijes kad provuces score-ove kroz softmax fju
+p_k = (exp(s_k))/sum(exp(s_j)) (j od 1 do k). vraca ono sa najvecim score-om
+
+kad trenira pokusava da minimizuje cross entropy
+
+
+SUPPORT VECTOR MACHINES
+--------------------------------------------------------------------------------------------------------------------------------
+
+bas dobri za komplikovane small to medium size dataset
+pokusavas da provuces sto veci "put" izmedju klasa
+osetljivi na velicinu brojeva, treba da se normalizuje
+hard i soft margin classification
+hard je lose jer je osetljivo na outlier
+hiperparametar c treba da smanjis ako overfituje
+
+SGDClassifier koristi SGD da bi trenira SVM
+Ako koristis LinearSVC treba da centriras podatke tako sto ces da oduzmes mean, ako koristi StandardScaler to je vec uradjeno
+loss treba da stavis na hinge i dual na false
+
+ako treba Polynomial mozes ono PolynomialFeatures
+
+kernel = "poly" simulira polinomijalno govno bez da ga zapravo radi. 
+coef01 utice na to koliko niski stepeni vs visoki uticu na model 
+
+simularity feature:
+dodas feature koji meri koliko je uzorak slican nekom landmark-u
+kako se bira landmark? najlakse da svaka instanca bude landmark, ako imas m instanca imas i m feature-a
+
+moze kernal = "rbf" ista fora kao za poly
+vece gamma, bell curve uzi
+ako overfituje smanji gamma
+
+generalno treba prvo da probas LinearSVC i rbf
+
+class         | Time complexity      | Out-of-core support | Scaling required | Kernel trick
+--------------------------------------------------------------------------------
+LinearSVC     | O(m*n)               |  No                 |    Yes           | No
+SGDClassifier | O(m*n)               |  Yes                |    Yes           | No
+SVC           | O(m^2*n) do O(m^3*n) |  No                 |    Yes           | Yes
