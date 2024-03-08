@@ -200,7 +200,8 @@ Early stopping
 ---------------------------------------
 treniras ga sve dok validation error pada, kada opet pocne da raste zaustivis treniranje
 ovo sprecava overfitting
-
+kod mini-batch GD i SGD nije dobra ideja da se stane cim error pocne da raste, jer moze opet da se spusti
+mozes da ga prekides kad je error iznad neke min vrednosti odredjeno vreme
 
 Logistic regression
 ---------------------------------------
@@ -260,7 +261,38 @@ ako overfituje smanji gamma
 generalno treba prvo da probas LinearSVC i rbf
 
 class         | Time complexity      | Out-of-core support | Scaling required | Kernel trick
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
 LinearSVC     | O(m*n)               |  No                 |    Yes           | No
 SGDClassifier | O(m*n)               |  Yes                |    Yes           | No
 SVC           | O(m^2*n) do O(m^3*n) |  No                 |    Yes           | Yes
+---------------------------------------------------------------------------------------------
+
+DESCISION TREES
+-----------------------------------------------------------------------------------------------------------
+znas sa intsis kako radi
+ne moras da normalizujes (scaling)
+
+CART algoritam brani binarna stable, ID3 moze i vise od 2
+
+mogu da daju i verovatnoucu da pripada odredjenoj klasi
+radi prvo klasicno do lista, onda deli broj instanca koji pripadaju klasama sa ukupnim brojem instanci koje su u tom listu
+(jasnije kad pogledas sliku str. 207(pdf) 181(knjiga))
+
+predikcije brze O(log2(m))
+trening spor, jer uporedjuje sve feature-e na svim instancama na svakom cvoru O(n*3*log2(m))
+
+gini vs entropy: nije bas bitno, slicna resenja, gini se brze racuna.
+entropy mozda pravi vise balansirana stabla
+
+ako treba regularization kad overfituje:
+    max_depth: mozes da stavis max_depth ( max dubina stabla)
+    min_tree_split: min broj instanca koji cvor mora da ima da bi se podelila
+    min_samples_leaf: min broj instanca koji list mora da ima
+    min_weight_fraciton_leaf: isto kao proslo, samo izrazeno kao razlomak
+    max_leaf_node: max broj listova
+    max_features: max broj feature-a koji se procenjuje za podelu na svakom cvoru
+
+smanjis max_* ili povecas min_*
+
+ENSAMBLE LEARNING AND RANDOM FORESTS
+-------------------------------------------------------------------------------------------------------------------
