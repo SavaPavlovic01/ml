@@ -296,3 +296,49 @@ smanjis max_* ili povecas min_*
 
 ENSAMBLE LEARNING AND RANDOM FORESTS
 -------------------------------------------------------------------------------------------------------------------
+spojis vise modela u jedan
+
+hard voting classifier: predikcija je klasa sa najvise "glasova"
+najbolje radi kad su svi modeli medjusobno nezavisni, ovo mozes ako koristis algoritme koji se mnogo razlikuju
+
+soft voting: uzima se predikcija sa najvisom verovatnocom, mozes samo ako alogirtmi mogu da racunaju verovatnocu
+generalno bolje od proslog jer daje prednost glasovima koji su "confident"
+
+mozes i da treniras isti model ali na razlicitom potskupu set-a
+bagging i pasting
+bagging ako sam dobro razumeo dozvoljava da jedna instanca bude iskoriscena vise puta za treniranje jednog modela
+pasting ne.
+oba dozvoljavaju da se jedna instanca koristi za treniranje vise modela
+ensamble ima slicni bias i manji variance od jednog clana grupe
+
+out of bag evaluation (oob) - posto se sample-uje deo set-a za treniranje svakog modela, svaki model ima deo
+podataka koji nije video. Ovaj deo moze da se koristi za validaciju svakog pojedinog modela.
+Mozes i da das ocenu celoj grupi kao prosek oob-a
+
+umesto da sample-ujes instance set-a mozes da sample-ujes feature-e (random subspace), mozes i oba (random pathces)
+
+extra trees (extra randomized trees ensamble) ne trazi optimalnu podelu grupe, nego svako stablo ima neki random threshold
+na koji deli. Ovo smanjuje variance a povecava bias
+Nema nacin da znas unapred da li ce da bude bolje od classic random forrest, mora samo da se proba
+
+boosting: kombinujes slabe modele u jedan jak, svaki model pokusava da ispavi greske proslog modela
+
+adaBoost: svaka instanac ima weight (koliko je bitna), instance koje jedan model lose klasifikuje kod 
+sledec dobiju veci weight.
+nedostatak je sto ne mozes paralelno da treniras modele
+ako overfituje mozes da smanjis broj estimator-a ili da ogranicis base estimator
+
+gradient boosting: iskr nisam razumeo, treniras svaki sledeci na rasiduals(idk sta je ovo) proslog
+ako sam dobro razumeo prvi treniras standarno, kod drugog kod labela radis y2 = y - predict(X), sto oduzima od prave vrednosti labela
+vrednost predikcija, ovo postaje novi skup labela i ovo ponavljas
+shrinkage: hiperparametar koji utice koliko svako stablo doprinosi, ako je nisko treba ti vise stabla ali ce 
+generalno bolje da generalizuje. ako previse stabala overfituje
+mozes sa early stopping da odredis najbolju broj stabala
+
+stacking
+umesto da imas brojis broj glasova ili tako nesto prosto, imas model koji uzima glasove kao ulaz i izbacuje konacnu predikciju
+taj model se zove blender
+
+da treniras blender mozes da podelis set na dva dela, prvi koristis da treniras prediktore, onda daju 
+predikcije za drugi deo seta, njihove izlaze koristis za treniranje blender-a
+mozes da imas i vise slojeva, samo moras da delis set na vise delova
