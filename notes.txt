@@ -342,3 +342,32 @@ taj model se zove blender
 da treniras blender mozes da podelis set na dva dela, prvi koristis da treniras prediktore, onda daju 
 predikcije za drugi deo seta, njihove izlaze koristis za treniranje blender-a
 mozes da imas i vise slojeva, samo moras da delis set na vise delova
+
+
+DIMENSIONALITY REDUCTION
+------------------------------------------------------------------------------------------------------------------------------
+Generalno kad izbacis nesto bice gore predikcije ali brze treniranje
+
+sto vise dimenzija ima, tacke su u proseku vise udaljene.
+
+Projection: Spustis se za jednu dimenziju. Npr. iz 3d predjes u 2d ravan tako sto ono sto nije na toj ravni, projektujes na nju
+
+Manifold learning
+
+PCA najcesci alogoritam
+odredi se najbolji hyperplane na koji se uradi projekcija
+trazi n osa koje odrzavaju najvise variance. Ove ose se zovu principal component
+ove komponente se dobijaju Singular Value Decomposition (SVD)
+U*Σ*V^T, V sadrzi komponente
+za PCA data mora da bude oko koordinatnog pocetka
+novi dataset dobijes tako sto stari * Wd (W sadrzi prvih d komponenata iz V)
+
+Explained Variance Ratio: koliko koja osa nosi variance originalnog dataset-a
+
+mozes i da uradis inverznu transformaciju, ovo je lossy
+
+randomized PCA: radi aproksimaciju komponenti, mnogo brze
+
+za klasican PCA mora ceo trening set da bude u memoriji
+za incremental PCA moze deo po deo
+postoji i kernal PCA
